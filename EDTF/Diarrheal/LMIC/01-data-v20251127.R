@@ -31,8 +31,8 @@ knitr::opts_chunk$set(fig.width = 10)
 ## import data ----
 all_dta <- list()
 check <- list()
-sources <- read_xlsx("../2025-11-27_FERG_results_UVA-SOM.xlsx", "SOURCE_index")
-sites <- read_xlsx("../2025-11-27_FERG_results_UVA-SOM.xlsx", "SITE_index")
+sources <- read_xlsx("2025-11-27_FERG_results_UVA-SOM.xlsx", "SOURCE_index")
+sites <- read_xlsx("2025-11-27_FERG_results_UVA-SOM.xlsx", "SITE_index")
 pathogens <-
   c("CAMP", "CRYP", "CYCL", "EAEC", "ENTA", "EPTP", "EPAP", "ETLT", "ETST",
     "GIAR", "NORO", "ROTA", "SALM", "SHIG", "STEC", "VIBR")
@@ -48,7 +48,7 @@ Flag_territory <- unlist(Territories)
 
 for (i in seq_along(pathogens)) {
   
-  dta <- read_xlsx("../2025-11-27_FERG_results_UVA-SOM.xlsx", pathogens[i]) %>%
+  dta <- read_xlsx("2025-11-27_FERG_results_UVA-SOM.xlsx", pathogens[i]) %>%
          left_join(sites) %>% left_join(sources) %>%
          unique()
   dta <- dta[rowSums(is.na(dta)) < ncol(dta) - 4, ]
@@ -891,27 +891,6 @@ Date <- format(Sys.Date(), "%Y%m%d")
 es <- all_dta
 names(es) <- pathogens
 saveRDS(es, paste0("es_LMIC_",Date,".RDS"))
-
-#'## presence of HI countries in data ---
-# zero_cases<- read_xlsx("//sciensano.be/fs/11401_LifeChron_FERG_DWH/Estimates/00_ADMIN/Endemic_countries.xlsx")%>%
-#   select(REG2, SUB2, ISO3, Country, edtf_diarrheal) %>% 
-#   rename(COUNTRY=ISO3, COUNTRY_LABEL = Country, DISEASEFREE = edtf_diarrheal)
-# 
-# HI_countries <- zero_cases %>%
-#   filter(DISEASEFREE == 0) %>%
-#   select(COUNTRY) %>%
-#   unlist()
-# 
-# dta_all_HI_zero <- dta_cat %>%
-#   filter(ISO3 %in% HI_countries) %>%
-#   filter(VALUE_X == 0)
-# 
-# dta_all_HI_nonzero <- dta_cat %>%
-#   filter(ISO3 %in% HI_countries) %>%
-#   filter(VALUE_X != 0)
-# 
-# kable(addmargins(table(dta_all_HI_zero$ISO3, dta_all_HI_zero$pathogen),FUN = list(list(Total = sum)),c(1,2)))
-# kable(addmargins(table(dta_all_HI_nonzero$ISO3, dta_all_HI_nonzero$pathogen),FUN = list(list(Total = sum)),c(1,2)))
 
 #' ## Study types present in data
 kable(table(dta_cat$SOURCE.DESIGN))
